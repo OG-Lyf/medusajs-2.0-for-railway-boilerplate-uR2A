@@ -32,7 +32,7 @@ export default async function seedDemoData({ container }: ExecArgs) {
   const salesChannelModuleService = container.resolve(Modules.SALES_CHANNEL);
   const storeModuleService = container.resolve(Modules.STORE);
 
-  const countries = ["in"];
+  const countries = ["gb", "de", "dk", "se", "fr", "es", "it"];
 
   logger.info("Seeding store data...");
   const [store] = await storeModuleService.listStores();
@@ -62,8 +62,11 @@ export default async function seedDemoData({ container }: ExecArgs) {
       update: {
         supported_currencies: [
           {
-            currency_code: "inr",
+            currency_code: "eur",
             is_default: true,
+          },
+          {
+            currency_code: "usd",
           },
         ],
         default_sales_channel_id: defaultSalesChannel[0].id,
@@ -75,8 +78,8 @@ export default async function seedDemoData({ container }: ExecArgs) {
     input: {
       regions: [
         {
-          name: "India",
-          currency_code: "inr",
+          name: "Europe",
+          currency_code: "eur",
           countries,
           payment_providers: ["pp_system_default"],
         },
@@ -101,11 +104,11 @@ export default async function seedDemoData({ container }: ExecArgs) {
     input: {
       locations: [
         {
-          name: "Rithushree Warehouse",
+          name: "European Warehouse",
           address: {
-            city: "Bangalore",
-            country_code: "IN",
-            address_1: "35, Dynamite Rd, Dasarahalli",
+            city: "Copenhagen",
+            country_code: "DK",
+            address_1: "",
           },
         },
       ],
@@ -137,14 +140,38 @@ export default async function seedDemoData({ container }: ExecArgs) {
   const shippingProfile = shippingProfileResult[0];
 
   const fulfillmentSet = await fulfillmentModuleService.createFulfillmentSets({
-    name: "Bangalore Warehouse delivery",
+    name: "European Warehouse delivery",
     type: "shipping",
     service_zones: [
       {
-        name: "India",
+        name: "Europe",
         geo_zones: [
           {
-            country_code: "in",
+            country_code: "gb",
+            type: "country",
+          },
+          {
+            country_code: "de",
+            type: "country",
+          },
+          {
+            country_code: "dk",
+            type: "country",
+          },
+          {
+            country_code: "se",
+            type: "country",
+          },
+          {
+            country_code: "fr",
+            type: "country",
+          },
+          {
+            country_code: "es",
+            type: "country",
+          },
+          {
+            country_code: "it",
             type: "country",
           },
         ],
@@ -176,7 +203,11 @@ export default async function seedDemoData({ container }: ExecArgs) {
         },
         prices: [
           {
-            currency_code: "inr",
+            currency_code: "usd",
+            amount: 10,
+          },
+          {
+            currency_code: "eur",
             amount: 10,
           },
           {
@@ -210,7 +241,11 @@ export default async function seedDemoData({ container }: ExecArgs) {
         },
         prices: [
           {
-            currency_code: "inr",
+            currency_code: "usd",
+            amount: 10,
+          },
+          {
+            currency_code: "eur",
             amount: 10,
           },
           {
@@ -275,56 +310,20 @@ export default async function seedDemoData({ container }: ExecArgs) {
     input: {
       product_categories: [
         {
-          name: "Plain Shirts",
-          is_active: true
+          name: "Shirts",
+          is_active: true,
         },
         {
-          name: "Patterned Shirts",
-          is_active: true
+          name: "Sweatshirts",
+          is_active: true,
         },
         {
-          name: "Check Shirts",
-          is_active: true
+          name: "Pants",
+          is_active: true,
         },
         {
-          name: "Flannel Shirts",
-          is_active: true
-        },
-        {
-          name: "Formal Shirts",
-          is_active: true
-        },
-        {
-          name: "Striped Shirts",
-          is_active: true
-        },
-        {
-          name: "Floral Shirts",
-          is_active: true
-        },
-        {
-          name: "Denim Shirts",
-          is_active: true
-        },
-        {
-          name: "Linen Shirts",
-          is_active: true
-        },
-        {
-          name: "Casual Shirts",
-          is_active: true
-        },
-        {
-          name: "Short Sleeve Shirts",
-          is_active: true
-        },
-        {
-          name: "Long Sleeve Shirts",
-          is_active: true
-        },
-        {
-          name: "Printed Shirts",
-          is_active: true
+          name: "Merch",
+          is_active: true,
         },
       ],
     },
@@ -334,21 +333,27 @@ export default async function seedDemoData({ container }: ExecArgs) {
     input: {
       products: [
         {
-          title: "Classic Plain White Tee",
+          title: "Medusa T-Shirt",
           category_ids: [
-            categoryResult.find((cat) => cat.name === "Plain Shirts").id,
+            categoryResult.find((cat) => cat.name === "Shirts").id,
           ],
           description:
-            "The essential white t-shirt. Our Classic Plain White Tee is made from 100% premium cotton for superior comfort and durability. A versatile piece for any wardrobe.",
-          handle: "plain-white-tee",
-          weight: 200,
+            "Reimagine the feeling of a classic T-shirt. With our cotton T-shirts, everyday essentials no longer have to be ordinary.",
+          handle: "t-shirt",
+          weight: 400,
           status: ProductStatus.PUBLISHED,
           images: [
             {
-              url: "https://via.placeholder.com/600x800?text=Plain+White+Front", // Placeholder image
+              url: "https://medusa-public-images.s3.eu-west-1.amazonaws.com/tee-black-front.png",
             },
             {
-              url: "https://via.placeholder.com/600x800?text=Plain+White+Back", // Placeholder image
+              url: "https://medusa-public-images.s3.eu-west-1.amazonaws.com/tee-black-back.png",
+            },
+            {
+              url: "https://medusa-public-images.s3.eu-west-1.amazonaws.com/tee-white-front.png",
+            },
+            {
+              url: "https://medusa-public-images.s3.eu-west-1.amazonaws.com/tee-white-back.png",
             },
           ],
           options: [
@@ -358,343 +363,151 @@ export default async function seedDemoData({ container }: ExecArgs) {
             },
             {
               title: "Color",
-              values: ["White"], // Only White for this variant
-            }
-          ],
-          variants: [
-            {
-              title: "S / White",
-              sku: "PLAIN-S-WHITE",
-              options: {
-                Size: "S",
-                Color: "White",
-              },
-              prices: [
-                {
-                  amount: 500,
-                  currency_code: "inr",
-                },
-              ],
+              values: ["Black", "White"],
             },
-            {
-              title: "M / White",
-              sku: "PLAIN-M-WHITE",
-              options: {
-                Size: "M",
-                Color: "White",
-              },
-              prices: [
-                {
-                  amount: 500,
-                  currency_code: "inr",
-                },
-              ],
-            },
-            {
-              title: "L / White",
-              sku: "PLAIN-L-WHITE",
-              options: {
-                Size: "L",
-                Color: "White",
-              },
-              prices: [
-                {
-                  amount: 500,
-                  currency_code: "inr",
-                },
-              ],
-            },
-            {
-              title: "XL / White",
-              sku: "PLAIN-XL-WHITE",
-              options: {
-                Size: "XL",
-                Color: "White",
-              },
-              prices: [
-                {
-                  amount: 500,
-                  currency_code: "inr",
-                },
-              ],
-            },
-          ],
-          sales_channels: [
-            {
-              id: defaultSalesChannel[0].id,
-            },
-          ],
-        },
-        {
-          title: "Classic Plain Black Tee",
-          category_ids: [
-            categoryResult.find((cat) => cat.name === "Plain Shirts").id,
-          ],
-          description:
-            "The essential black t-shirt. Our Classic Plain Black Tee is made from 100% premium cotton for superior comfort and durability. A versatile piece for any wardrobe.",
-          handle: "plain-black-tee",
-          weight: 200,
-          status: ProductStatus.PUBLISHED,
-          images: [
-            {
-              url: "https://via.placeholder.com/600x800?text=Plain+Black+Front", // Placeholder image
-            },
-            {
-              url: "https://via.placeholder.com/600x800?text=Plain+Black+Back", // Placeholder image
-            },
-          ],
-          options: [
-            {
-              title: "Size",
-              values: ["S", "M", "L", "XL"],
-            },
-            {
-              title: "Color",
-              values: ["Black"], // Only Black for this variant
-            }
           ],
           variants: [
             {
               title: "S / Black",
-              sku: "PLAIN-S-BLACK",
+              sku: "SHIRT-S-BLACK",
               options: {
                 Size: "S",
                 Color: "Black",
               },
               prices: [
                 {
-                  amount: 500,
-                  currency_code: "inr",
+                  amount: 10,
+                  currency_code: "eur",
+                },
+                {
+                  amount: 15,
+                  currency_code: "usd",
+                },
+              ],
+            },
+            {
+              title: "S / White",
+              sku: "SHIRT-S-WHITE",
+              options: {
+                Size: "S",
+                Color: "White",
+              },
+              prices: [
+                {
+                  amount: 10,
+                  currency_code: "eur",
+                },
+                {
+                  amount: 15,
+                  currency_code: "usd",
                 },
               ],
             },
             {
               title: "M / Black",
-              sku: "PLAIN-M-BLACK",
+              sku: "SHIRT-M-BLACK",
               options: {
                 Size: "M",
                 Color: "Black",
               },
               prices: [
                 {
-                  amount: 500,
-                  currency_code: "inr",
+                  amount: 10,
+                  currency_code: "eur",
+                },
+                {
+                  amount: 15,
+                  currency_code: "usd",
+                },
+              ],
+            },
+            {
+              title: "M / White",
+              sku: "SHIRT-M-WHITE",
+              options: {
+                Size: "M",
+                Color: "White",
+              },
+              prices: [
+                {
+                  amount: 10,
+                  currency_code: "eur",
+                },
+                {
+                  amount: 15,
+                  currency_code: "usd",
                 },
               ],
             },
             {
               title: "L / Black",
-              sku: "PLAIN-L-BLACK",
+              sku: "SHIRT-L-BLACK",
               options: {
                 Size: "L",
                 Color: "Black",
               },
               prices: [
                 {
-                  amount: 500,
-                  currency_code: "inr",
+                  amount: 10,
+                  currency_code: "eur",
+                },
+                {
+                  amount: 15,
+                  currency_code: "usd",
+                },
+              ],
+            },
+            {
+              title: "L / White",
+              sku: "SHIRT-L-WHITE",
+              options: {
+                Size: "L",
+                Color: "White",
+              },
+              prices: [
+                {
+                  amount: 10,
+                  currency_code: "eur",
+                },
+                {
+                  amount: 15,
+                  currency_code: "usd",
                 },
               ],
             },
             {
               title: "XL / Black",
-              sku: "PLAIN-XL-BLACK",
+              sku: "SHIRT-XL-BLACK",
               options: {
                 Size: "XL",
                 Color: "Black",
               },
               prices: [
                 {
-                  amount: 500,
-                  currency_code: "inr",
+                  amount: 10,
+                  currency_code: "eur",
                 },
-              ],
-            },
-          ],
-          sales_channels: [
-            {
-              id: defaultSalesChannel[0].id,
-            },
-          ],
-        },
-
-        // --- PATTERNED SHIRT ---
-        {
-          title: "Geometric Pattern Shirt",
-          category_ids: [
-            categoryResult.find((cat) => cat.name === "Patterned Shirts").id,
-          ],
-          description:
-            "Make a statement with our Geometric Pattern Shirt. This shirt features a modern, eye-catching geometric design printed on soft, breathable cotton.",
-          handle: "geometric-pattern-shirt",
-          weight: 250,
-          status: ProductStatus.PUBLISHED,
-          images: [
-            {
-              url: "https://via.placeholder.com/600x800?text=Pattern+Front", // Placeholder image
-            },
-            {
-              url: "https://via.placeholder.com/600x800?text=Pattern+Back", // Placeholder image
-            },
-          ],
-          options: [
-            {
-              title: "Size",
-              values: ["S", "M", "L", "XL"],
-            },
-            {
-              title: "Color",
-              values: ["Default"], // Single color variant
-            }
-          ],
-          variants: [
-            {
-              title: "S / Default",
-              sku: "PATTERN-S-DEFAULT",
-              options: {
-                Size: "S",
-                Color: "Default",
-              },
-              prices: [
                 {
-                  amount: 800,
-                  currency_code: "inr",
+                  amount: 15,
+                  currency_code: "usd",
                 },
               ],
             },
             {
-              title: "M / Default",
-              sku: "PATTERN-M-DEFAULT",
-              options: {
-                Size: "M",
-                Color: "Default",
-              },
-              prices: [
-                {
-                  amount: 800,
-                  currency_code: "inr",
-                },
-              ],
-            },
-            {
-              title: "L / Default",
-              sku: "PATTERN-L-DEFAULT",
-              options: {
-                Size: "L",
-                Color: "Default",
-              },
-              prices: [
-                {
-                  amount: 800,
-                  currency_code: "inr",
-                },
-              ],
-            },
-            {
-              title: "XL / Default",
-              sku: "PATTERN-XL-DEFAULT",
+              title: "XL / White",
+              sku: "SHIRT-XL-WHITE",
               options: {
                 Size: "XL",
-                Color: "Default",
+                Color: "White",
               },
               prices: [
                 {
-                  amount: 800,
-                  currency_code: "inr",
+                  amount: 10,
+                  currency_code: "eur",
                 },
-              ],
-            },
-          ],
-          sales_channels: [
-            {
-              id: defaultSalesChannel[0].id,
-            },
-          ],
-        },
-
-        // --- FLANNEL SHIRTS ---
-        {
-          title: "Cozy Red Flannel Shirt",
-          category_ids: [
-            categoryResult.find((cat) => cat.name === "Flannel Shirts").id,
-          ],
-          description:
-            "Embrace comfort and warmth with our Cozy Red Flannel Shirt. This classic red flannel is made from ultra-soft, brushed cotton for a cozy feel.",
-          handle: "red-flannel-shirt",
-          weight: 350,
-          status: ProductStatus.PUBLISHED,
-          images: [
-            {
-              url: "https://via.placeholder.com/600x800?text=Flannel+Red+Front", // Placeholder image
-            },
-            {
-              url: "https://via.placeholder.com/600x800?text=Flannel+Red+Back", // Placeholder image
-            },
-          ],
-          options: [
-            {
-              title: "Size",
-              values: ["S", "M", "L", "XL"],
-            },
-            {
-              title: "Color",
-              values: ["Default"], // Single color variant
-            }
-          ],
-          variants: [
-            {
-              title: "S / Default",
-              sku: "FLANNEL-RED-S-DEFAULT",
-              options: {
-                Size: "S",
-                Color: "Default",
-              },
-              prices: [
                 {
-                  amount: 950,
-                  currency_code: "inr",
-                },
-              ],
-            },
-            {
-              title: "M / Default",
-              sku: "FLANNEL-RED-M-DEFAULT",
-              options: {
-                Size: "M",
-                Color: "Default",
-              },
-              prices: [
-                {
-                  amount: 950,
-                  currency_code: "inr",
-                },
-              ],
-            },
-            {
-              title: "L / Default",
-              sku: "FLANNEL-RED-L-DEFAULT",
-              options: {
-                Size: "L",
-                Color: "Default",
-              },
-              prices: [
-                {
-                  amount: 950,
-                  currency_code: "inr",
-                },
-              ],
-            },
-            {
-              title: "XL / Default",
-              sku: "FLANNEL-RED-XL-DEFAULT",
-              options: {
-                Size: "XL",
-                Color: "Default",
-              },
-              prices: [
-                {
-                  amount: 950,
-                  currency_code: "inr",
+                  amount: 15,
+                  currency_code: "usd",
                 },
               ],
             },
@@ -706,21 +519,21 @@ export default async function seedDemoData({ container }: ExecArgs) {
           ],
         },
         {
-          title: "Classic Blue Flannel Shirt",
+          title: "Medusa Sweatshirt",
           category_ids: [
-            categoryResult.find((cat) => cat.name === "Flannel Shirts").id,
+            categoryResult.find((cat) => cat.name === "Sweatshirts").id,
           ],
           description:
-            "Stay comfortable and stylish in our Classic Blue Flannel Shirt. Crafted from premium, soft-brushed cotton, this shirt provides warmth and a timeless look.",
-          handle: "blue-flannel-shirt",
-          weight: 350,
+            "Reimagine the feeling of a classic sweatshirt. With our cotton sweatshirt, everyday essentials no longer have to be ordinary.",
+          handle: "sweatshirt",
+          weight: 400,
           status: ProductStatus.PUBLISHED,
           images: [
             {
-              url: "https://via.placeholder.com/600x800?text=Flannel+Blue+Front", // Placeholder image
+              url: "https://medusa-public-images.s3.eu-west-1.amazonaws.com/sweatshirt-vintage-front.png",
             },
             {
-              url: "https://via.placeholder.com/600x800?text=Flannel+Blue+Back", // Placeholder image
+              url: "https://medusa-public-images.s3.eu-west-1.amazonaws.com/sweatshirt-vintage-back.png",
             },
           ],
           options: [
@@ -728,65 +541,73 @@ export default async function seedDemoData({ container }: ExecArgs) {
               title: "Size",
               values: ["S", "M", "L", "XL"],
             },
-            {
-              title: "Color",
-              values: ["Default"], // Single color variant
-            }
           ],
           variants: [
             {
-              title: "S / Default",
-              sku: "FLANNEL-BLUE-S-DEFAULT",
+              title: "S",
+              sku: "SWEATSHIRT-S",
               options: {
                 Size: "S",
-                Color: "Default",
               },
               prices: [
                 {
-                  amount: 950,
-                  currency_code: "inr",
+                  amount: 10,
+                  currency_code: "eur",
+                },
+                {
+                  amount: 15,
+                  currency_code: "usd",
                 },
               ],
             },
             {
-              title: "M / Default",
-              sku: "FLANNEL-BLUE-M-DEFAULT",
+              title: "M",
+              sku: "SWEATSHIRT-M",
               options: {
                 Size: "M",
-                Color: "Default",
               },
               prices: [
                 {
-                  amount: 950,
-                  currency_code: "inr",
+                  amount: 10,
+                  currency_code: "eur",
+                },
+                {
+                  amount: 15,
+                  currency_code: "usd",
                 },
               ],
             },
             {
-              title: "L / Default",
-              sku: "FLANNEL-BLUE-L-DEFAULT",
+              title: "L",
+              sku: "SWEATSHIRT-L",
               options: {
                 Size: "L",
-                Color: "Default",
               },
               prices: [
                 {
-                  amount: 950,
-                  currency_code: "inr",
+                  amount: 10,
+                  currency_code: "eur",
+                },
+                {
+                  amount: 15,
+                  currency_code: "usd",
                 },
               ],
             },
             {
-              title: "XL / Default",
-              sku: "FLANNEL-BLUE-XL-DEFAULT",
+              title: "XL",
+              sku: "SWEATSHIRT-XL",
               options: {
                 Size: "XL",
-                Color: "Default",
               },
               prices: [
                 {
-                  amount: 950,
-                  currency_code: "inr",
+                  amount: 10,
+                  currency_code: "eur",
+                },
+                {
+                  amount: 15,
+                  currency_code: "usd",
                 },
               ],
             },
@@ -797,24 +618,20 @@ export default async function seedDemoData({ container }: ExecArgs) {
             },
           ],
         },
-
-        // --- PRINTED SHIRT ---
         {
-          title: "Artistic Print Shirt",
-          category_ids: [
-            categoryResult.find((cat) => cat.name === "Printed Shirts").id,
-          ],
+          title: "Medusa Sweatpants",
+          category_ids: [categoryResult.find((cat) => cat.name === "Pants").id],
           description:
-            "Express your unique style with our Artistic Print Shirt. This shirt features a vibrant, abstract print on a comfortable cotton base.",
-          handle: "artistic-print-shirt",
-          weight: 275,
+            "Reimagine the feeling of classic sweatpants. With our cotton sweatpants, everyday essentials no longer have to be ordinary.",
+          handle: "sweatpants",
+          weight: 400,
           status: ProductStatus.PUBLISHED,
           images: [
             {
-              url: "https://via.placeholder.com/600x800?text=Printed+Front", // Placeholder image
+              url: "https://medusa-public-images.s3.eu-west-1.amazonaws.com/sweatpants-gray-front.png",
             },
             {
-              url: "https://via.placeholder.com/600x800?text=Printed+Back", // Placeholder image
+              url: "https://medusa-public-images.s3.eu-west-1.amazonaws.com/sweatpants-gray-back.png",
             },
           ],
           options: [
@@ -822,65 +639,171 @@ export default async function seedDemoData({ container }: ExecArgs) {
               title: "Size",
               values: ["S", "M", "L", "XL"],
             },
-            {
-              title: "Color",
-              values: ["Default"], // Single color variant
-            }
           ],
           variants: [
             {
-              title: "S / Default",
-              sku: "PRINTED-S-DEFAULT",
+              title: "S",
+              sku: "SWEATPANTS-S",
               options: {
                 Size: "S",
-                Color: "Default",
               },
               prices: [
                 {
-                  amount: 1100,
-                  currency_code: "inr",
+                  amount: 10,
+                  currency_code: "eur",
+                },
+                {
+                  amount: 15,
+                  currency_code: "usd",
                 },
               ],
             },
             {
-              title: "M / Default",
-              sku: "PRINTED-M-DEFAULT",
+              title: "M",
+              sku: "SWEATPANTS-M",
               options: {
                 Size: "M",
-                Color: "Default",
               },
               prices: [
                 {
-                  amount: 1100,
-                  currency_code: "inr",
+                  amount: 10,
+                  currency_code: "eur",
+                },
+                {
+                  amount: 15,
+                  currency_code: "usd",
                 },
               ],
             },
             {
-              title: "L / Default",
-              sku: "PRINTED-L-DEFAULT",
+              title: "L",
+              sku: "SWEATPANTS-L",
               options: {
                 Size: "L",
-                Color: "Default",
               },
               prices: [
                 {
-                  amount: 1100,
-                  currency_code: "inr",
+                  amount: 10,
+                  currency_code: "eur",
+                },
+                {
+                  amount: 15,
+                  currency_code: "usd",
                 },
               ],
             },
             {
-              title: "XL / Default",
-              sku: "PRINTED-XL-DEFAULT",
+              title: "XL",
+              sku: "SWEATPANTS-XL",
               options: {
                 Size: "XL",
-                Color: "Default",
               },
               prices: [
                 {
-                  amount: 1100,
-                  currency_code: "inr",
+                  amount: 10,
+                  currency_code: "eur",
+                },
+                {
+                  amount: 15,
+                  currency_code: "usd",
+                },
+              ],
+            },
+          ],
+          sales_channels: [
+            {
+              id: defaultSalesChannel[0].id,
+            },
+          ],
+        },
+        {
+          title: "Medusa Shorts",
+          category_ids: [categoryResult.find((cat) => cat.name === "Merch").id],
+          description:
+            "Reimagine the feeling of classic shorts. With our cotton shorts, everyday essentials no longer have to be ordinary.",
+          handle: "shorts",
+          weight: 400,
+          status: ProductStatus.PUBLISHED,
+          images: [
+            {
+              url: "https://medusa-public-images.s3.eu-west-1.amazonaws.com/shorts-vintage-front.png",
+            },
+            {
+              url: "https://medusa-public-images.s3.eu-west-1.amazonaws.com/shorts-vintage-back.png",
+            },
+          ],
+          options: [
+            {
+              title: "Size",
+              values: ["S", "M", "L", "XL"],
+            },
+          ],
+          variants: [
+            {
+              title: "S",
+              sku: "SHORTS-S",
+              options: {
+                Size: "S",
+              },
+              prices: [
+                {
+                  amount: 10,
+                  currency_code: "eur",
+                },
+                {
+                  amount: 15,
+                  currency_code: "usd",
+                },
+              ],
+            },
+            {
+              title: "M",
+              sku: "SHORTS-M",
+              options: {
+                Size: "M",
+              },
+              prices: [
+                {
+                  amount: 10,
+                  currency_code: "eur",
+                },
+                {
+                  amount: 15,
+                  currency_code: "usd",
+                },
+              ],
+            },
+            {
+              title: "L",
+              sku: "SHORTS-L",
+              options: {
+                Size: "L",
+              },
+              prices: [
+                {
+                  amount: 10,
+                  currency_code: "eur",
+                },
+                {
+                  amount: 15,
+                  currency_code: "usd",
+                },
+              ],
+            },
+            {
+              title: "XL",
+              sku: "SHORTS-XL",
+              options: {
+                Size: "XL",
+              },
+              prices: [
+                {
+                  amount: 10,
+                  currency_code: "eur",
+                },
+                {
+                  amount: 15,
+                  currency_code: "usd",
                 },
               ],
             },
@@ -907,7 +830,7 @@ export default async function seedDemoData({ container }: ExecArgs) {
   for (const inventoryItem of inventoryItems) {
     const inventoryLevel = {
       location_id: stockLocation.id,
-      stocked_quantity: 20,
+      stocked_quantity: 1000000,
       inventory_item_id: inventoryItem.id,
     }
     inventoryLevels.push(inventoryLevel)
